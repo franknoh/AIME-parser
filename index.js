@@ -93,9 +93,10 @@ getHtml('/wiki/index.php/AIME_Problems_and_Solutions')
       }
     }
   })
-  }).then(async () =>  {
-    if(all!==''){pdf.create(all, options).toFile('./pdf/all.pdf', function(err, res) {
-      if (err) return console.log(err);
-      console.log(res);
-    });}
   })
+  // .then(async () =>  {
+  //   if(all!==''){pdf.create(all, options).toFile('./pdf/all.pdf', function(err, res) {
+  //     if (err) return console.log(err);
+  //     console.log(res);
+  //   });}
+  // })
