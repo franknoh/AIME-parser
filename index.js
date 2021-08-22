@@ -2,6 +2,7 @@ const axios = require("axios");
 const cheerio = require("cheerio");
 const fs = require("fs");
 var pdf = require('html-pdf');
+const del = require('del');
 const log = console.log;
 
 //________________________________________
@@ -16,6 +17,7 @@ options = {
     "left": "7mm",
   },
   "renderDelay": 10,
+  timeout: 86400000,
 }
 
 // 폴더 생성
@@ -53,7 +55,11 @@ getHtml('/wiki/index.php/AIME_Problems_and_Solutions')
     return lists;
   }).then((lists)=>{
     lists.forEach(elem => {
-      var dir = './pdf/'+elem.name.toString();
+      if (!fs.existsSync('./pdf')){
+        del('./pdf');
+        fs.mkdirSync('./pdf');
+      }
+      let dir = './pdf/'+elem.name.toString();
       if (!fs.existsSync(dir)){
         fs.mkdirSync(dir);
       }
@@ -61,7 +67,8 @@ getHtml('/wiki/index.php/AIME_Problems_and_Solutions')
     return lists;
   })
   .then(async res => {
-    for (e of res) {
+    log(res)
+    res.forEach(e=>{
       if (![1,2].includes(res.indexOf(e))){
       for (let f = 1; f < 16; f++) {
         getHtml(e.url + '_Problems/Problem_' + f).then(html => {
@@ -85,10 +92,10 @@ getHtml('/wiki/index.php/AIME_Problems_and_Solutions')
         })
       }
     }
-  }
-  }).then(() =>  {
-    pdf.create(all, options).toFile('./pdf/all.pdf', function(err, res) {
+  })
+  }).then(async () =>  {
+    if(all!==''){pdf.create(all, options).toFile('./pdf/all.pdf', function(err, res) {
       if (err) return console.log(err);
       console.log(res);
-    });
+    });}
   })
