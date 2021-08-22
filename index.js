@@ -82,21 +82,25 @@ getHtml('/wiki/index.php/AIME_Problems_and_Solutions')
           $("div.printfooter").remove();
           $("div.catlinks").remove();
           htmldata='<!doctype html><html><head><title>김치볶음밥소고기</title></head><body>'+$bodyList.html().split('//').join('http://')+'</body></html>'
-          fs.writeFileSync('index.html',htmldata);
+          //fs.writeFileSync('index.html',htmldata);
           log(e.name+'-'+f);
           all+=$bodyList.html().split('//').join('http://')+'\n\n';
           pdf.create($bodyList.html().split('//').join('http://'), options).toFile('./pdf/'+e.name+'/'+e.name+'-'+f+'.pdf', function(err, res) {
             if (err) return console.log(err);
             console.log(res);
           });
+          if(res.indexOf(e)==res.length-1){
+            if(all!==''){
+                pdf.create(all, options).toFile('./pdf/all.pdf', function(err, res) {
+                  if (err) return console.log(err);
+                  console.log(res);
+
+                  console.log('done!')
+              });
+            }
+          }
         })
       }
     }
   })
   })
-  // .then(async () =>  {
-  //   if(all!==''){pdf.create(all, options).toFile('./pdf/all.pdf', function(err, res) {
-  //     if (err) return console.log(err);
-  //     console.log(res);
-  //   });}
-  // })
