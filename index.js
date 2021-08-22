@@ -69,7 +69,7 @@ getHtml('/wiki/index.php/AIME_Problems_and_Solutions')
   .then(async res => {
     log(res)
     res.forEach(e=>{
-      if (![1,2].includes(res.indexOf(e))){
+      if (![0, 1].includes(res.indexOf(e))){
       for (let f = 1; f < 16; f++) {
         getHtml(e.url + '_Problems/Problem_' + f).then(html => {
           const $ = cheerio.load(html.data);
@@ -81,7 +81,7 @@ getHtml('/wiki/index.php/AIME_Problems_and_Solutions')
           $("div.page-wrapper p").last().remove()
           $("div.printfooter").remove();
           $("div.catlinks").remove();
-          htmldata='<!doctype html><html><head><title>김치볶음밥소고기</title></head><body>'+$bodyList.html().split('//').join('http://')+'</body></html>'
+          //htmldata='<!doctype html><html><head><title>김치볶음밥소고기</title></head><body>'+$bodyList.html().split('//').join('http://')+'</body></html>'
           //fs.writeFileSync('index.html',htmldata);
           log(e.name+'-'+f);
           all+=$bodyList.html().split('//').join('http://')+'\n\n';
@@ -89,7 +89,7 @@ getHtml('/wiki/index.php/AIME_Problems_and_Solutions')
             if (err) return console.log(err);
             console.log(res);
           });
-          if(res.indexOf(e)==res.length-1){
+          /*if(res.indexOf(e)==res.length-1){
             if(all!==''){
                 pdf.create(all, options).toFile('./pdf/all.pdf', function(err, res) {
                   if (err) return console.log(err);
@@ -98,7 +98,7 @@ getHtml('/wiki/index.php/AIME_Problems_and_Solutions')
                   console.log('done!')
               });
             }
-          }
+          }*/
         })
       }
     }
