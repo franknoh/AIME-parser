@@ -22,6 +22,7 @@ options = {
 
 // 폴더 생성
 let all=[];
+let allhtml='';
 //________________________________________
 
 
@@ -63,16 +64,19 @@ getHtml('/wiki/index.php/AIME_Problems_and_Solutions')
         del('./html');
         fs.mkdirSync('./html');
       }
+      /*
       let dir = './pdf/'+elem.name.toString();
       if (!fs.existsSync(dir)){
         fs.mkdirSync(dir);
-      }
+      }*/
     });
     return lists;
   })
   .then(async res => {
     log(res)
-    res.forEach(e=>{
+    //res.forEach(e=>{
+    if(true){
+      e=res[2]
       if (![0, 1].includes(res.indexOf(e))){
       for (let f = 1; f < 16; f++) {
         getHtml(e.url + '_Problems/Problem_' + f).then(html => {
@@ -88,32 +92,30 @@ getHtml('/wiki/index.php/AIME_Problems_and_Solutions')
           //htmldata='<!doctype html><html><head><title>김치볶음밥소고기</title></head><body>'+$bodyList.html().split('//').join('http://')+'</body></html>'
           //fs.writeFileSync('index.html',htmldata);
           log(e.name+'-'+f);
-          fs.writeFileSync('./html/'+e.name+'-'+f+'.html',$bodyList.html().split('//').join('http://').split('https://http').join('https'))
+          fs.writeFileSync('./html/'+e.name+'-'+f+'.html',$bodyList.html().split('//').join('http://').split('https:http://').join('https://').split('"/wiki').join('"https://artofproblemsolving.com/wiki'))
           all.push(e.name+'-'+f+'.html')
-          pdf.create($bodyList.html().split('//').join('http://').split('https://http').join('https'), options).toFile('./pdf/'+e.name+'/'+e.name+'-'+f+'.pdf', function(err, res) {
-            if (err) return console.log(err);
-            console.log(res);
-          });
-          if(res.indexOf(e)==res.length-1){
-            if(f==15){
-              all.forEach((e)=>{
-                fs.readFileSync('./html/'+e).then((res)=>{
-                  allhtml+=res+'\n\n\n'
-                }).then(()=>{
-                  if(all.indexOf(e)==all.length-1){
-                    pdf.create(all, options).toFile('./pdf/all.pdf', function(err, res) {
-                      if (err) return console.log(err);
-                      console.log(res);
-    
-                      console.log('done!')
-                    });
-                  }
-                })
-              })
+          // pdf.create($bodyList.html().split('//').join('http://').split('https://http').join('https'), options).toFile('./pdf/'+e.name+'/'+e.name+'-'+f+'.pdf', function(err, res) {
+          //   if (err) return console.log(err);
+          //   console.log(res);
+          // });
+          if(all.length==15){
+            all=[];
+            for(mn=1;mn<16;mn++){
+              all.push(e.name+'-'+mn+'.html')
             }
+            all.forEach((el)=>{
+              html = fs.readFileSync('./html/'+el, "utf8")
+              allhtml+=html+'\n\n\n'
+              if(el==all[all.length-1]){
+                pdf.create(allhtml, options).toFile('./pdf/'+e.name+'.pdf', function(err, res) {
+                  if (err) return console.log(err);
+                  console.log(res);
+                });
+              }
+            })
           }
         })
       }
     }
-  })
+  }//)
   })
