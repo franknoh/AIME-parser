@@ -19,10 +19,8 @@ options = {
   "renderDelay": 10,
   timeout: 86400000,
 }
-
+const start = Date.now()
 // 폴더 생성
-let all=[];
-let allhtml='';
 //________________________________________
 
 
@@ -74,10 +72,12 @@ getHtml('/wiki/index.php/AIME_Problems_and_Solutions')
   })
   .then(async res => {
     log(res)
-    //res.forEach(e=>{
-    if(true){
-      e=res[2]
+    res.forEach(e=>{
+    //if(true){
+      //e=res[2]
       if (![0, 1].includes(res.indexOf(e))){
+      let all=[];
+      let allhtml='';
       for (let f = 1; f < 16; f++) {
         getHtml(e.url + '_Problems/Problem_' + f).then(html => {
           const $ = cheerio.load(html.data);
@@ -92,7 +92,7 @@ getHtml('/wiki/index.php/AIME_Problems_and_Solutions')
           //htmldata='<!doctype html><html><head><title>김치볶음밥소고기</title></head><body>'+$bodyList.html().split('//').join('http://')+'</body></html>'
           //fs.writeFileSync('index.html',htmldata);
           log(e.name+'-'+f);
-          fs.writeFileSync('./html/'+e.name+'-'+f+'.html',$bodyList.html().split('//').join('http://').split('https:http://').join('https://').split('"/wiki').join('"https://artofproblemsolving.com/wiki'))
+          fs.writeFileSync('./html/'+e.name+'-'+f+'.html',$bodyList.html().split('//').join('http://').split('https:http://').join('https://').split('"/wiki').join('"https://artofproblemsolving.com/wiki').split('https://wiki-images.artofproblemsolving.comhttp://').join('https://wiki-images.artofproblemsolving.com//'))
           all.push(e.name+'-'+f+'.html')
           // pdf.create($bodyList.html().split('//').join('http://').split('https://http').join('https'), options).toFile('./pdf/'+e.name+'/'+e.name+'-'+f+'.pdf', function(err, res) {
           //   if (err) return console.log(err);
@@ -110,6 +110,10 @@ getHtml('/wiki/index.php/AIME_Problems_and_Solutions')
                 pdf.create(allhtml, options).toFile('./pdf/'+e.name+'.pdf', function(err, res) {
                   if (err) return console.log(err);
                   console.log(res);
+                  if(e.name==e[e.length-1].name){
+                    const stop = new Date()
+                    console.log(`${(stop - start)/1000} seconds`)
+                  }
                 });
               }
             })
@@ -117,5 +121,5 @@ getHtml('/wiki/index.php/AIME_Problems_and_Solutions')
         })
       }
     }
-  }//)
+  })
   })
